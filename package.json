@@ -7,7 +7,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc",
-    "lint:check": "eslint --ignore-path .eslintignore --ext .js,.ts .",
+    "lint-check": "eslint --ignore-pattern .eslintignore --ext .js,.ts ",
     "lint:fix": "eslint . --fix",
     "prepare": "husky",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,9 +16,10 @@
   "author": "",
   "license": "ISC",
   "lint-staged": {
-    "src/**/*.ts": "yarn lint:check "
+    "src/**/*.ts": "yarn lint-check "
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

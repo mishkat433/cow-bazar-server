@@ -2,6 +2,8 @@ import express, { NextFunction, Request, Response } from 'express';
 const app = express();
 import cors from "cors"
 import morgan from 'morgan';
+import router from './app/routes';
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
 
 
 app.use(cors())
@@ -15,9 +17,9 @@ app.get("/", async (req: Request, res: Response) => {
 
 app.use(morgan('dev'))
 
-// app.use('/api/v1', router)
+app.use('/api/v1', router)
 
-// app.use(globalErrorHandler)
+app.use(globalErrorHandler)
 
 
 app.use((req: Request, res: Response, next: NextFunction) => {
