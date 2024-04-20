@@ -21,6 +21,7 @@ const userSchema = new Schema<IUser>({
     },
     password: {
         type: String,
+        select: false,
         minlength: [6, 'User password must be minimum 6 characters'],
         // validate: {
         //     validator: function (pass: string): boolean {
@@ -29,6 +30,7 @@ const userSchema = new Schema<IUser>({
         //     message: 'Password must be capital letter, small letter and number'
         // },
         required: [true, "password is required"],
+
         set: (v: string) => bcrypt.hashSync(v, bcrypt.genSaltSync(10))
     },
     name: {

@@ -10,6 +10,7 @@ export type UserName = {
 };
 
 export type IUser = {
+    _id: string;
     userId: string;
     phoneNumber: string;
     role: USER_ROLE;
@@ -19,3 +20,8 @@ export type IUser = {
     budget: number;
     income: number;
 }
+
+
+export type IUserFilter = {
+    searchTerm?: string;
+};

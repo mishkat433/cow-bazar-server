@@ -9,12 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userServices = void 0;
-const user_mode_1 = require("./user.mode");
-const createUser = (userData) => __awaiter(void 0, void 0, void 0, function* () {
-    const count = yield user_mode_1.User.find().countDocuments();
-    userData.userId = 'C1234W' + (count + 1);
-    const result = yield user_mode_1.User.create(userData);
+exports.cowServices = void 0;
+const cows_mode_1 = require("./cows.mode");
+const createCow = (cowData) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = cows_mode_1.Cows.create(cowData);
     return result;
 });
-exports.userServices = { createUser };
+exports.cowServices = { createCow };

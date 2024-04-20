@@ -8,6 +8,7 @@ const mongoose_1 = require("mongoose");
 const userEnums_1 = require("../../../enums/userEnums");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const userSchema = new mongoose_1.Schema({
+    userId: { type: "string" },
     phoneNumber: {
         type: String,
         unique: true,
