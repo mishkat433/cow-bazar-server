@@ -2,16 +2,14 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
-import { userServices } from "./user.services";
+import { cowServices } from "./cows.services";
 
 
+const createCowHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-const createUserHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const cowData = req.body
 
-    const userData = req.body
-
-
-    const result = await userServices.createUser(userData)
+    const result = await cowServices.createCow(cowData)
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
@@ -19,7 +17,8 @@ const createUserHandler: RequestHandler = catchAsync(async (req: Request, res: R
         message: 'User created successfully',
         data: result
     })
+
 })
 
 
-export const userController = { createUserHandler }
+export const cowsController = { createCowHandler }

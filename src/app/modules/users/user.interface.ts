@@ -10,6 +10,7 @@ export type UserName = {
 };
 
 export type IUser = {
+    userId: string;
     phoneNumber: string;
     role: USER_ROLE;
     password: string;

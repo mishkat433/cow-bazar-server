@@ -1,12 +1,13 @@
-import { Schema, model } from "mongoose";
-import { IUser, UserModel } from "./user.interface";
-import { USER_ROLE } from "../../../enums/userEnums";
-import bcrypt from "bcryptjs";
-
-
-
-const userSchema = new Schema<IUser>({
-    userId: { type: "string" },
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
+const mongoose_1 = require("mongoose");
+const userEnums_1 = require("../../../enums/userEnums");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const userSchema = new mongoose_1.Schema({
     phoneNumber: {
         type: String,
         unique: true,
@@ -16,7 +17,7 @@ const userSchema = new Schema<IUser>({
     },
     role: {
         type: String,
-        enum: USER_ROLE,
+        enum: userEnums_1.USER_ROLE,
         required: true,
     },
     password: {
@@ -29,7 +30,7 @@ const userSchema = new Schema<IUser>({
         //     message: 'Password must be capital letter, small letter and number'
         // },
         required: [true, "password is required"],
-        set: (v: string) => bcrypt.hashSync(v, bcrypt.genSaltSync(10))
+        set: (v) => bcryptjs_1.default.hashSync(v, bcryptjs_1.default.genSaltSync(10))
     },
     name: {
         type: {
@@ -60,13 +61,10 @@ const userSchema = new Schema<IUser>({
         required: true,
         default: 0
     },
-
 }, {
     timestamps: true,
     toJSON: {
         virtuals: true,
     },
 });
-
-
-export const User = model<IUser, UserModel>('user', userSchema);
+exports.User = (0, mongoose_1.model)('user', userSchema);

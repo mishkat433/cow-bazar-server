@@ -6,9 +6,12 @@ import { User } from "./user.mode"
 
 const createUser = async (userData: IUser): Promise<IUser | null> => {
 
-    const reslult = await User.create(userData)
+    const count = await User.find().countDocuments()
+    userData.userId = 'C1234W' + (count + 1)
 
-    return reslult
+    const result = await User.create(userData)
+
+    return result
 
 
 }
