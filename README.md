@@ -1,7 +1,6 @@
 # Project Name : Cow-Bazar-Server #
 
-## Live Site Link ##
-coming soon
+## Live Site Link : coming soon ##
 
 ### Application Routes: ###
 
