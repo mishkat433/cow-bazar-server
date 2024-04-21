@@ -19,7 +19,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const pick_1 = __importDefault(require("../../../shared/pick"));
 const cows_services_1 = require("./cows.services");
 const cows_constants_1 = require("./cows.constants");
-const pagination_1 = require("../../../../constance/pagination");
+const pagination_1 = require("../../../constance/pagination");
 const createCowHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const cowData = req.body;
     const result = yield cows_services_1.cowServices.createCow(cowData);

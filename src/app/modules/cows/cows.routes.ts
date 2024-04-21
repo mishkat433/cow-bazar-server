@@ -12,8 +12,8 @@ router.get('/:id', cowsController.getSingleCowsHandler);
 
 router.post('/create-cow', validateRequest(cowValidation.createCowZodValidation), cowsController.createCowHandler);
 
-router.patch('/updateUser/:id', cowsController.updateCowsHandler);
+router.patch('/updateCow/:id', cowsController.updateCowsHandler);
 
-router.delete('/deleteUser/:id', cowsController.deleteCowsHandle);
+router.delete('/deleteCow/:id', cowsController.deleteCowsHandle);
 
 export const cowRouter = router;

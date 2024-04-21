@@ -19,7 +19,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const user_services_1 = require("./user.services");
 const user_constants_1 = require("./user.constants");
 const pick_1 = __importDefault(require("../../../shared/pick"));
-const pagination_1 = require("../../../../constance/pagination");
+const pagination_1 = require("../../../constance/pagination");
 const createUserHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const userData = req.body;
     const result = yield user_services_1.userServices.createUser(userData);
