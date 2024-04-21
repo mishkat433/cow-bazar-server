@@ -17,6 +17,9 @@ const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
 const user_services_1 = require("./user.services");
+const user_constants_1 = require("./user.constants");
+const pick_1 = __importDefault(require("../../../shared/pick"));
+const pagination_1 = require("../../../../constance/pagination");
 const createUserHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const userData = req.body;
     const result = yield user_services_1.userServices.createUser(userData);
@@ -27,4 +30,53 @@ const createUserHandler = (0, catchAsync_1.default)((req, res, next) => __awaite
         data: result
     });
 }));
-exports.userController = { createUserHandler };
+const getAllUsersHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const filters = (0, pick_1.default)(req.query, user_constants_1.userFilterableField);
+    const paginationOptions = (0, pick_1.default)(req.query, pagination_1.paginationField);
+    const result = yield user_services_1.userServices.getAllUsers(filters, paginationOptions);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User fetched successfully',
+        meta: result.meta,
+        data: result.data
+    });
+}));
+const getSingleUserHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const result = yield user_services_1.userServices.getSingleUser(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User fetched successfully',
+        data: result
+    });
+}));
+const updateUserHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const payload = req.body;
+    const id = req.params.id;
+    const result = yield user_services_1.userServices.updateUser(payload, id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User update successfully',
+        data: result
+    });
+}));
+const deleteUserHandle = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const result = yield user_services_1.userServices.deleteUser(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User delete successfully',
+        data: result
+    });
+}));
+exports.userController = {
+    createUserHandler,
+    getSingleUserHandler,
+    getAllUsersHandler,
+    updateUserHandler,
+    deleteUserHandle
+};

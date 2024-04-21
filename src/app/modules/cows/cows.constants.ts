@@ -8,4 +8,20 @@ export const cow_category = ["Dairy", "Beef", "DualPurpose"]
 export const cow_label = ["for sale", "sold out"]
 
 
+export const cowsSearchableFields = ['sellerId', 'label', 'location', 'breed', 'category', 'name'];
+
+export const cowsFilterableField = [
+    'searchTerm',
+    'label',
+    'location',
+    'breed',
+    'name',
+    'category',
+    'weight',
+    'price',
+    'minPrice',
+    'maxPrice'
+];
+
+
 

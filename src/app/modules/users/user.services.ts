@@ -7,14 +7,17 @@ import { User } from "./user.mode"
 import { userSearchableFields } from "./user.constants"
 import ApiError from "../../../Errors/ApiError"
 import httpStatus from "http-status"
+import { generateUserId } from "./user.utils"
 
 
 
 
 const createUser = async (userData: IUser): Promise<IUser | null> => {
 
-    const count = await User.find().countDocuments()
-    userData.userId = 'C1234W' + (count + 1)
+    const id = await generateUserId();
+
+    userData.userId = id;
+
 
     const result = await User.create(userData)
 
@@ -107,7 +110,7 @@ const deleteUser = async (id: string) => {
     const deleteUser = await User.findOneAndDelete({ userId: id, role: { $ne: 'admin' } })
 
     if (!deleteUser) {
-        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "cannot delete user, something went wrong")
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "Something went wrong, user cannot be deleted")
     }
 
     return deleteUser

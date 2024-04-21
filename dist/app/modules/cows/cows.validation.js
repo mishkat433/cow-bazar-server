@@ -14,7 +14,7 @@ const createCowZodValidation = zod_1.z.object({
         age: zod_1.z.number({
             required_error: 'Cow age is required',
         }),
-        price: zod_1.z.string({
+        price: zod_1.z.number({
             required_error: 'Cow price is required',
         }),
         location: zod_1.z.enum([...cows_constants_1.cow_location], {

@@ -14,7 +14,7 @@ const createCowZodValidation = z.object({
         age: z.number({
             required_error: 'Cow age is required',
         }),
-        price: z.string({
+        price: z.number({
             required_error: 'Cow price is required',
         }),
 
