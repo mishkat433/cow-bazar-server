@@ -24,7 +24,6 @@ const createCowHandler: RequestHandler = catchAsync(async (req: Request, res: Re
 
 })
 
-
 const getAllCowsHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     const filters = pick(req.query, cowsFilterableField);

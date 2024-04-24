@@ -1,13 +1,13 @@
-import { SortOrder } from "mongoose"
-import { IGenericResponse } from "../../../globalInterfaces/common"
-import { IPaginationOptions } from "../../../globalInterfaces/pagination"
-import { paginationHelper } from "../../../helpers/paginationHelper"
-import { IUser, IUserFilter } from "./user.interface"
-import { User } from "./user.mode"
-import { userSearchableFields } from "./user.constants"
-import ApiError from "../../../Errors/ApiError"
-import httpStatus from "http-status"
-import { generateUserId } from "./user.utils"
+import { SortOrder } from "mongoose";
+import { IGenericResponse } from "../../../globalInterfaces/common";
+import { IPaginationOptions } from "../../../globalInterfaces/pagination";
+import { paginationHelper } from "../../../helpers/paginationHelper";
+import { IUser, IUserFilter } from "./user.interface";
+import { User } from "./user.mode";
+import { userSearchableFields } from "./user.constants";
+import ApiError from "../../../Errors/ApiError";
+import httpStatus from "http-status";
+import { generateUserId } from "./user.utils";
 
 
 
@@ -18,8 +18,20 @@ const createUser = async (userData: IUser): Promise<IUser | null> => {
 
     userData.userId = id;
 
+    if (userData.role === "buyer") {
+        userData.income = 0
+    }
+
+    // if (userData.role === "seller") {
+    //     userData.budget = 0
+    // }
+
 
     const result = await User.create(userData)
+
+    if (!result) {
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "failed to create user")
+    }
 
     return result
 }

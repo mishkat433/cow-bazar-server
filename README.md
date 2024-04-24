@@ -28,4 +28,11 @@
 * /api/v1/cows?searchTerm=Kala Chan
 * and other filtering option  is label/breed/category/weight/price.
 
+
+#### Orders ####
+
+* /api/v1/order/create-order (POST)
+* /api/v1/order/ (GET)
+
+
 ### Thank You ###

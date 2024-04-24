@@ -5,6 +5,7 @@ import { COW_BREED, COW_CATEGORY, COW_LABEL, COW_LOCATION } from "../../../enums
 export type cowModel = Model<ICow, object>;
 
 export type ICow = {
+    cowId: string;
     sellerId: string;
     name: string;
     age: number;

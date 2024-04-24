@@ -8,19 +8,17 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 
 app.use(cors())
 app.use(express.json())
+app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: true }))
 
+app.use('/api/v1', router)
 
 app.get("/", async (req: Request, res: Response) => {
     res.send("'Cow Bazar' server is available")
 })
 
-app.use(morgan('dev'))
-
-app.use('/api/v1', router)
 
 app.use(globalErrorHandler)
-
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     res.status(404).json({

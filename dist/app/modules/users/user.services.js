@@ -33,7 +33,16 @@ const user_utils_1 = require("./user.utils");
 const createUser = (userData) => __awaiter(void 0, void 0, void 0, function* () {
     const id = yield (0, user_utils_1.generateUserId)();
     userData.userId = id;
+    if (userData.role === "buyer") {
+        userData.income = 0;
+    }
+    // if (userData.role === "seller") {
+    //     userData.budget = 0
+    // }
     const result = yield user_mode_1.User.create(userData);
+    if (!result) {
+        throw new ApiError_1.default(http_status_1.default.NON_AUTHORITATIVE_INFORMATION, "failed to create user");
+    }
     return result;
 });
 const getAllUsers = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {

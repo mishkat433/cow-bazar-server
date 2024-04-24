@@ -4,6 +4,11 @@ import { COW_BREED, COW_CATEGORY, COW_LABEL, COW_LOCATION } from "../../../enums
 
 
 const cowSchema = new Schema<ICow>({
+
+    cowId: {
+        type: String,
+        required: true,
+    },
     sellerId: {
         type: String,
         required: true,

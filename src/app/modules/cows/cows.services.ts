@@ -8,8 +8,12 @@ import { IGenericResponse } from "../../../globalInterfaces/common"
 import { paginationHelper } from "../../../helpers/paginationHelper"
 import { SortOrder } from "mongoose"
 import { cowsSearchableFields } from "./cows.constants"
+import { generateUserId } from "../users/user.utils"
 
 const createCow = async (cowData: ICow): Promise<ICow | null> => {
+
+    cowData.cowId = 'Cow' + Math.floor(Math.random() * 1420)
+
 
     const result = Cows.create(cowData)
 
@@ -57,7 +61,6 @@ const getAllCows = async (filters: IUserFilter, paginationOptions: IPaginationOp
         andCondition.push({ price: { $lte: maxPrice } })
     }
 
-    console.log(andCondition);
     const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {}
 
     const count = await Cows.find(whereCondition).countDocuments()

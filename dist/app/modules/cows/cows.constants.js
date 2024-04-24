@@ -11,7 +11,6 @@ exports.cowsFilterableField = [
     'label',
     'location',
     'breed',
-    'name',
     'category',
     'weight',
     'price',

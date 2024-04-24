@@ -12,6 +12,6 @@ const router = express_1.default.Router();
 router.get('/', cows_controller_1.cowsController.getAllCowsHandler);
 router.get('/:id', cows_controller_1.cowsController.getSingleCowsHandler);
 router.post('/create-cow', (0, validateRequest_1.default)(cows_validation_1.cowValidation.createCowZodValidation), cows_controller_1.cowsController.createCowHandler);
-router.patch('/updateUser/:id', cows_controller_1.cowsController.updateCowsHandler);
-router.delete('/deleteUser/:id', cows_controller_1.cowsController.deleteCowsHandle);
+router.patch('/updateCow/:id', cows_controller_1.cowsController.updateCowsHandler);
+router.delete('/deleteCow/:id', cows_controller_1.cowsController.deleteCowsHandle);
 exports.cowRouter = router;

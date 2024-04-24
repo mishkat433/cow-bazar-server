@@ -63,7 +63,6 @@ const getAllCows = (filters, paginationOptions) => __awaiter(void 0, void 0, voi
     if (maxPrice) {
         andCondition.push({ price: { $lte: maxPrice } });
     }
-    console.log(andCondition);
     const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
     const count = yield cows_mode_1.Cows.find(whereCondition).countDocuments();
     const { page, limit, skip, sortBy, sortOrder, prevPage, nextPages } = paginationHelper_1.paginationHelper.calculatePagination(paginationOptions, count);
