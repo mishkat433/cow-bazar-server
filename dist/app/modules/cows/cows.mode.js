@@ -4,6 +4,10 @@ exports.Cows = void 0;
 const mongoose_1 = require("mongoose");
 const cowsEnums_1 = require("../../../enums/cowsEnums");
 const cowSchema = new mongoose_1.Schema({
+    cowId: {
+        type: String,
+        required: true,
+    },
     sellerId: {
         type: String,
         required: true,

@@ -30,6 +30,7 @@ const cows_mode_1 = require("./cows.mode");
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
 const cows_constants_1 = require("./cows.constants");
 const createCow = (cowData) => __awaiter(void 0, void 0, void 0, function* () {
+    cowData.cowId = 'Cow' + Math.floor(Math.random() * 1420);
     const result = cows_mode_1.Cows.create(cowData);
     if (!result) {
         throw new ApiError_1.default(http_status_1.default.NON_AUTHORITATIVE_INFORMATION, "Cows cannot created");
