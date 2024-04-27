@@ -195,7 +195,6 @@ const getOrder = (filters, paginationOptions) => __awaiter(void 0, void 0, void 
     };
 });
 const getMyOrder = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    // const result = await Order.find({ buyerId: id })
     const result = yield orders_model_1.Order.aggregate([
         { $match: { buyerId: id } },
         {
@@ -215,13 +214,24 @@ const getMyOrder = (id) => __awaiter(void 0, void 0, void 0, function* () {
             }
         },
         {
+            $unwind: "$cow_data"
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "cow_data.sellerId",
+                foreignField: "userId",
+                as: "cow_data.cow_seller"
+            }
+        },
+        {
             $project: {
                 orderDetails: 1,
                 buyer_data: 1,
-                cow_data: 1
+                cow_data: 1,
             }
         },
-        { $project: { "buyer_data.password": 0 } },
+        { $project: { "buyer_data.password": 0, "cow_data.cow_seller.password": 0 } },
     ]);
     return result;
 });

@@ -81,10 +81,29 @@ const updateAdminHandler: RequestHandler = catchAsync(async (req: Request, res: 
     })
 })
 
+const updatePasswordHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    const { OldPassword, newPassword } = req.body
+
+    const authorizedData = req.user
+
+    const result = await adminServices.updatePassword(OldPassword, newPassword, authorizedData)
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Admin password update successfully',
+        data: result
+    })
+})
+
+
+
 export const adminController = {
     createAdminHandler,
     loginAdminHandler,
     refreshTokenHandler,
     getMyProfileHandler,
-    updateAdminHandler
+    updateAdminHandler,
+    updatePasswordHandler
 }

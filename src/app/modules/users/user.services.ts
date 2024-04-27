@@ -9,6 +9,7 @@ import ApiError from "../../../Errors/ApiError";
 import httpStatus from "http-status";
 import { generateUserId } from "./user.utils";
 import { JwtPayload } from "jsonwebtoken";
+import bcrypt from 'bcryptjs';
 
 
 
@@ -132,6 +133,34 @@ const updateUser = async (payload: IUser, authorizedData: any, id: string): Prom
     return result
 }
 
+const updatePassword = async (OldPassword: string, newPassword: string, authorizedData: any): Promise<IUser | null> => {
+
+    if (OldPassword === newPassword) {
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "oldPassword and newPassword are the same")
+    }
+
+    const isExist = await User.findOne({ userId: authorizedData.userId }).select({ password: 1 })
+
+    if (!isExist) {
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "un authorized user")
+    }
+
+    const isPasswordMatch = await bcrypt.compare(OldPassword, isExist.password);
+
+    if (!isPasswordMatch) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, "old password in not correct");
+    }
+
+    const result = await User.findOneAndUpdate({ userId: authorizedData.userId }, { password: newPassword }, { new: true, runValidators: true, context: 'query' }).select({ password: 0 });
+
+
+    if (!result) {
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "failed to update user")
+    }
+
+    return result
+}
+
 const deleteUser = async (id: string) => {
 
     const deleteUser = await User.findOneAndDelete({ userId: id, role: { $ne: 'admin' } })
@@ -150,5 +179,6 @@ export const userServices = {
     getSingleUser,
     updateUser,
     deleteUser,
-    getMyProfile
+    getMyProfile,
+    updatePassword
 }

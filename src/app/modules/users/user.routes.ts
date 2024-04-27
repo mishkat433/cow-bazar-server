@@ -15,7 +15,9 @@ router.get('/my-profile', auth(USER_ROLE.buyer, USER_ROLE.seller), userControlle
 
 router.post('/signUp', validateRequest(UserValidation.createUserZodValidation), userController.createUserHandler);
 
-router.patch('/updateUser/:id', auth(USER_ROLE.admin, USER_ROLE.buyer, USER_ROLE.seller), userController.updateUserHandler);
+router.patch('/updateUser/:id', validateRequest(UserValidation.updateUserZodValidation), auth(USER_ROLE.admin, USER_ROLE.buyer, USER_ROLE.seller), userController.updateUserHandler);
+
+router.patch('/update-password', validateRequest(UserValidation.updateUserZodValidation), auth(USER_ROLE.admin, USER_ROLE.buyer, USER_ROLE.seller), userController.updatePasswordHandler);
 
 router.delete('/deleteUser/:id', auth(USER_ROLE.admin, USER_ROLE.buyer, USER_ROLE.seller), userController.deleteUserHandle);
 

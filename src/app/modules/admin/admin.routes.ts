@@ -4,6 +4,7 @@ import { adminController } from './admin.controller';
 import { adminValidation } from './admin.validation';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from '../../../enums/userEnums';
+import { UserValidation } from '../users/user.validation';
 
 
 
@@ -19,5 +20,7 @@ router.post('/refresh-token', validateRequest(adminValidation.refreshTokenZodVal
 router.get('/my-profile', auth(USER_ROLE.admin), adminController.getMyProfileHandler);
 
 router.patch('/my-profile', auth(USER_ROLE.admin), adminController.updateAdminHandler);
+
+router.patch('/update-password', validateRequest(UserValidation.updateUserZodValidation), auth(USER_ROLE.admin), adminController.updatePasswordHandler);
 
 export const AdminRoutes = router;

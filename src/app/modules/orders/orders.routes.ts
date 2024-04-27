@@ -6,7 +6,6 @@ import auth from '../../middlewares/auth';
 import { USER_ROLE } from '../../../enums/userEnums';
 
 
-
 const router = express.Router();
 
 router.get('/', auth(USER_ROLE.admin), orderController.getOrderHandler);

@@ -31,7 +31,39 @@ const createUserZodValidation = z.object({
     }),
 });
 
+const updateUserZodValidation = z.object({
+    body: z.object({
+        // phoneNumber: z.string({
+        //     required_error: 'Contact number is required',
+        // }).min(11, "phone number is too short").max(11, "phone number is too long"),
+
+        role: z.enum([...userRole] as [string, ...string[]], {}).optional(),
+
+        name: z.object({
+            firstName: z.string({
+                required_error: 'First name is required',
+            }).min(3, "Name is too short").max(32, "Name is too long").optional(),
+            lastName: z.string().optional()
+        }).optional(),
+
+        address: z.string({}).optional(),
+        budget: z.number({}).optional(),
+        income: z.number({}).optional(),
+
+    }),
+});
+
+const updatePasswordZodSchema = z.object({
+    body: z.object({
+        OldPassword: z.string({ required_error: 'OldPassword is required', }).min(6, "old password is too short").max(50, "old password is too long"),
+        newPassword: z.string({ required_error: 'newPassword is required', }).min(6, "new password is too short").max(50, "new password is too long"),
+    }),
+});
+
 
 export const UserValidation = {
     createUserZodValidation,
+    updateUserZodValidation,
+    updatePasswordZodSchema
+
 };

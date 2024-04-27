@@ -102,8 +102,11 @@ const getMyProfile = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     }
     return result;
 });
-const updateUser = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_mode_1.User.findOneAndUpdate({ userId: id }, payload, { new: true, runValidators: true, context: 'query' }).select({ password: 0 });
+const updateUser = (payload, authorizedData, id) => __awaiter(void 0, void 0, void 0, function* () {
+    if (authorizedData.userId !== id) {
+        throw new ApiError_1.default(http_status_1.default.NOT_EXTENDED, "This userId is not authorized");
+    }
+    const result = yield user_mode_1.User.findOneAndUpdate({ userId: authorizedData.userId }, payload, { new: true, runValidators: true, context: 'query' }).select({ password: 0 });
     if (!result) {
         throw new ApiError_1.default(http_status_1.default.NON_AUTHORITATIVE_INFORMATION, "failed to update user");
     }

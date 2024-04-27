@@ -79,9 +79,17 @@ const getMyProfile = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     }
     return result;
 });
+const updateProfile = (payload, authorizedData) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield admin_model_1.Admin.findOneAndUpdate({ adminId: authorizedData.adminId }, payload, { new: true, runValidators: true, context: 'query' }).select({ password: 0 });
+    if (!result) {
+        throw new ApiError_1.default(http_status_1.default.NON_AUTHORITATIVE_INFORMATION, "failed to update user");
+    }
+    return result;
+});
 exports.adminServices = {
     createAdmin,
     loginAdmin,
     refreshToken,
-    getMyProfile
+    getMyProfile,
+    updateProfile
 };

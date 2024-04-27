@@ -75,6 +75,9 @@ const getMyProfileHandler: RequestHandler = catchAsync(async (req: Request, res:
 const updateUserHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     const payload = req.body
+    delete payload.password
+    delete payload.phoneNumber
+
     const authorizedData = req.user
     const id = req.params.id
 
@@ -84,6 +87,22 @@ const updateUserHandler: RequestHandler = catchAsync(async (req: Request, res: R
         statusCode: httpStatus.OK,
         success: true,
         message: 'User update successfully',
+        data: result
+    })
+})
+
+const updatePasswordHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    const { OldPassword, newPassword } = req.body
+
+    const authorizedData = req.user
+
+    const result = await userServices.updatePassword(OldPassword, newPassword, authorizedData)
+
+    sendResponse<IUser>(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'User password update successfully',
         data: result
     })
 })
@@ -111,5 +130,6 @@ export const userController = {
     getAllUsersHandler,
     updateUserHandler,
     deleteUserHandle,
-    getMyProfileHandler
+    getMyProfileHandler,
+    updatePasswordHandler
 }

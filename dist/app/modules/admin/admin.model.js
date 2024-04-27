@@ -31,7 +31,7 @@ const adminSchema = new mongoose_1.Schema({
         //     message: 'Password must be capital letter, small letter and number'
         // },
         required: [true, "password is required"],
-        select: 0,
+        select: false,
         set: (v) => bcryptjs_1.default.hashSync(v, bcryptjs_1.default.genSaltSync(10))
     },
     name: {

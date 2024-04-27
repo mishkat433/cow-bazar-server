@@ -71,9 +71,21 @@ const getMyProfileHandler = (0, catchAsync_1.default)((req, res, next) => __awai
         data: result
     });
 }));
+const updateAdminHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const payload = req.body;
+    const authorizedData = req.user;
+    const result = yield admin_services_1.adminServices.updateProfile(payload, authorizedData);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'admin update successfully',
+        data: result
+    });
+}));
 exports.adminController = {
     createAdminHandler,
     loginAdminHandler,
     refreshTokenHandler,
-    getMyProfileHandler
+    getMyProfileHandler,
+    updateAdminHandler
 };

@@ -113,10 +113,39 @@ const updateProfile = async (payload: JwtPayload, authorizedData: any): Promise<
     return result
 }
 
+const updatePassword = async (OldPassword: string, newPassword: string, authorizedData: JwtPayload | null): Promise<void> => {
+
+    if (OldPassword === newPassword) {
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "oldPassword and newPassword are the same")
+    }
+
+    const isExist = await Admin.findOne({ adminId: authorizedData?.adminId }).select({ password: 1 })
+
+    if (!isExist) {
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "un authorized user")
+    }
+
+    const isPasswordMatch = await bcrypt.compare(OldPassword, isExist.password);
+
+    if (!isPasswordMatch) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, "old password in not correct");
+    }
+
+    const result = await Admin.findOneAndUpdate({ userId: authorizedData?.userId }, { password: newPassword, passwordChangeAt: new Date() }, { new: true, runValidators: true, context: 'query' }).select({ password: 0 });
+
+
+    if (!result) {
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "failed to update password")
+    }
+
+    return
+}
+
 export const adminServices = {
     createAdmin,
     loginAdmin,
     refreshToken,
     getMyProfile,
-    updateProfile
+    updateProfile,
+    updatePassword
 }
