@@ -7,9 +7,9 @@ import { User } from "../users/user.mode";
 import mongoose from "mongoose";
 
 // : Promise<IOrder | null>
-const createOrder = async (orderData: IOrder) => {
+const createOrder = async (orderData: IOrder): Promise<IOrder | null> => {
 
-
+    const session = await mongoose.startSession();
 
     const cow = await Cows.findOne({ cowId: orderData.cowId, label: { $ne: "sold out" } });
 
@@ -38,7 +38,9 @@ const createOrder = async (orderData: IOrder) => {
     }
 
     const decreasePrice = await User.updateOne({ userId: orderData.buyerId }, { $inc: { budget: -cow.price } });
+
     if (!decreasePrice) {
+        await Cows.updateOne({ cowId: orderData.cowId }, { $set: { label: "for sale" } })
         throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "something went wrong when trying to decrease");
     }
 
@@ -54,9 +56,9 @@ const createOrder = async (orderData: IOrder) => {
         throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "Cows cannot created")
     }
 
+    session.endSession();
 
     return result
-
 }
 
 // const createOrder = async (orderData: IOrder) => {

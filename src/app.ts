@@ -4,9 +4,10 @@ import cors from "cors"
 import morgan from 'morgan';
 import router from './app/routes';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
-
+import cookieParser from "cookie-parser"
 
 app.use(cors())
+app.use(cookieParser())
 app.use(express.json())
 app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: true }))

@@ -28,6 +28,8 @@ const createUserHandler: RequestHandler = catchAsync(async (req: Request, res: R
 
 const getAllUsersHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
+    console.log(req.user);
+
     const filters = pick(req.query, userFilterableField);
 
     const paginationOptions = pick(req.query, paginationField);
