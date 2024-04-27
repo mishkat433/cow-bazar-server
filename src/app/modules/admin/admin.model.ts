@@ -31,7 +31,7 @@ const adminSchema = new Schema<IAdmin>({
         //     message: 'Password must be capital letter, small letter and number'
         // },
         required: [true, "password is required"],
-        select: 0,
+        select: false,
         set: (v: string) => bcrypt.hashSync(v, bcrypt.genSaltSync(10))
     },
     name: {

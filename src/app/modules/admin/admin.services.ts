@@ -103,9 +103,20 @@ const getMyProfile = async (payload: JwtPayload): Promise<IAdmin | null> => {
     return result
 }
 
+const updateProfile = async (payload: JwtPayload, authorizedData: any): Promise<IAdmin | null> => {
+
+    const result = await Admin.findOneAndUpdate({ adminId: authorizedData.adminId }, payload, { new: true, runValidators: true, context: 'query' }).select({ password: 0 });
+
+    if (!result) {
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "failed to update user")
+    }
+    return result
+}
+
 export const adminServices = {
     createAdmin,
     loginAdmin,
     refreshToken,
-    getMyProfile
+    getMyProfile,
+    updateProfile
 }

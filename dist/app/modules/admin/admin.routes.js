@@ -16,6 +16,7 @@ const router = express_1.default.Router();
 router.post('/create-admin', (0, validateRequest_1.default)(admin_validation_1.adminValidation.createAdminZodValidation), (0, auth_1.default)(userEnums_1.USER_ROLE.admin), admin_controller_1.adminController.createAdminHandler);
 router.post('/login', (0, validateRequest_1.default)(admin_validation_1.adminValidation.loginAdminZodValidation), admin_controller_1.adminController.loginAdminHandler);
 router.post('/refresh-token', (0, validateRequest_1.default)(admin_validation_1.adminValidation.refreshTokenZodValidation), admin_controller_1.adminController.refreshTokenHandler);
+router.get('/my-profile', (0, auth_1.default)(userEnums_1.USER_ROLE.admin), admin_controller_1.adminController.getMyProfileHandler);
 // router.patch('/updateUser/:id', userController.updateUserHandler);
 // router.delete('/deleteUser/:id', userController.deleteUserHandle);
 exports.AdminRoutes = router;

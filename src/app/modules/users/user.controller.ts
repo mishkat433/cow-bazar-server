@@ -75,9 +75,10 @@ const getMyProfileHandler: RequestHandler = catchAsync(async (req: Request, res:
 const updateUserHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     const payload = req.body
+    const authorizedData = req.user
     const id = req.params.id
 
-    const result = await userServices.updateUser(payload, id)
+    const result = await userServices.updateUser(payload, authorizedData, id)
 
     sendResponse<IUser>(res, {
         statusCode: httpStatus.OK,

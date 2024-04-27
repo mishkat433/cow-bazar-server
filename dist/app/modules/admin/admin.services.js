@@ -72,8 +72,16 @@ const refreshToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
         accessToken: newAccessToken,
     };
 });
+const getMyProfile = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield admin_model_1.Admin.findOne({ userId: payload.userId }, { password: 0 });
+    if (!result) {
+        throw new ApiError_1.default(http_status_1.default.NON_AUTHORITATIVE_INFORMATION, "failed to get a user");
+    }
+    return result;
+});
 exports.adminServices = {
     createAdmin,
     loginAdmin,
     refreshToken,
+    getMyProfile
 };

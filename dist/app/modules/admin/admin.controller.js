@@ -61,8 +61,19 @@ const refreshTokenHandler = (0, catchAsync_1.default)((req, res, next) => __awai
         data: accessToken
     });
 }));
+const getMyProfileHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const payload = req.user ? req.user : req.params;
+    const result = yield admin_services_1.adminServices.getMyProfile(payload);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'admin fetched successfully',
+        data: result
+    });
+}));
 exports.adminController = {
     createAdminHandler,
     loginAdminHandler,
-    refreshTokenHandler
+    refreshTokenHandler,
+    getMyProfileHandler
 };

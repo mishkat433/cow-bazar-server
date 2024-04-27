@@ -116,10 +116,13 @@ const getMyProfile = async (payload: JwtPayload): Promise<IUser | null> => {
     return result
 }
 
-const updateUser = async (payload: IUser, id: string): Promise<IUser | null> => {
+const updateUser = async (payload: IUser, authorizedData: any, id: string): Promise<IUser | null> => {
 
+    if (authorizedData.userId !== id) {
+        throw new ApiError(httpStatus.NOT_EXTENDED, "This userId is not authorized")
+    }
 
-    const result = await User.findOneAndUpdate({ userId: id }, payload, { new: true, runValidators: true, context: 'query' }).select({ password: 0 });
+    const result = await User.findOneAndUpdate({ userId: authorizedData.userId }, payload, { new: true, runValidators: true, context: 'query' }).select({ password: 0 });
 
 
     if (!result) {

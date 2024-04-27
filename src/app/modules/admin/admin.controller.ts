@@ -65,9 +65,26 @@ const getMyProfileHandler: RequestHandler = catchAsync(async (req: Request, res:
     })
 })
 
+
+const updateAdminHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    const payload = req.body
+    const authorizedData = req.user
+
+    const result = await adminServices.updateProfile(payload, authorizedData)
+
+    sendResponse<IAdmin>(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'admin update successfully',
+        data: result
+    })
+})
+
 export const adminController = {
     createAdminHandler,
     loginAdminHandler,
     refreshTokenHandler,
-    getMyProfileHandler
+    getMyProfileHandler,
+    updateAdminHandler
 }

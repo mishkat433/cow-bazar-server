@@ -4,13 +4,28 @@
 
 ### Application Routes: ###
 
+#### Admin ####
+* * api/v1/admins/create-admin (POST)
+* * api/v1/admins/my-profile (GET)
+* * api/v1/admins/my-profile (FETCH) update admin
+
+#### Auth(Admin) ####
+* api/v1/admins/login (POST)
+* api/v1/admins//refresh-token (POST)
+
 #### User ####
 
 * api/v1/users/signUp (POST)
 * /api/v1/users (GET)
+* /api/v1/users/my-profile (GET)
 * /api/v1/users/:id (GET) "include userId for getting single user"
 * /api/v1/users/updateUser/:id (PATCH) "include userId for update single user (ex: C1234W01)"
 * /api/v1/users/deleteUser/:id (DELETE) "include userId for delete single user (ex: C1234W01)"
+
+#### Auth(User) ####
+* api/v1/auth/login (POST)
+* api/v1/auth/refresh-token (POST)
+
 
 #### Cows ####
 * /api/v1/cows/create-cow (POST)
@@ -32,6 +47,7 @@
 #### Orders ####
 
 * /api/v1/order/create-order (POST)
+* /api/v1/order/my-order/:id (GET)
 * /api/v1/order/ (GET)
 
 

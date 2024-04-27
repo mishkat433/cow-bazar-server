@@ -95,6 +95,13 @@ const getSingleUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return result;
 });
+const getMyProfile = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_mode_1.User.findOne({ userId: payload.userId }, { password: 0 });
+    if (!result) {
+        throw new ApiError_1.default(http_status_1.default.NON_AUTHORITATIVE_INFORMATION, "failed to get a user");
+    }
+    return result;
+});
 const updateUser = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_mode_1.User.findOneAndUpdate({ userId: id }, payload, { new: true, runValidators: true, context: 'query' }).select({ password: 0 });
     if (!result) {
@@ -114,5 +121,6 @@ exports.userServices = {
     getAllUsers,
     getSingleUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    getMyProfile
 };

@@ -20,7 +20,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jwtValidationHelpers_1 = require("../../../helpers/jwtValidationHelpers");
 const config_1 = __importDefault(require("../../../config"));
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const isAdminExist = yield user_mode_1.User.findOne({ $and: [{ phoneNumber: payload.phoneNumber }, { role: payload.role }] }, { role: 1, password: 1, adminId: 1 }).lean();
+    const isAdminExist = yield user_mode_1.User.findOne({ $and: [{ phoneNumber: payload.phoneNumber }, { role: payload.role }] }, { role: 1, password: 1, userId: 1 }).lean();
     if (!isAdminExist) {
         throw new ApiError_1.default(http_status_1.default.NON_AUTHORITATIVE_INFORMATION, "User doesn't exist with this phone number or role");
     }
@@ -29,8 +29,8 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, "invalid password");
     }
     const role = isAdminExist.role;
-    const adminId = isAdminExist.userId;
-    const tokenData = { adminId, role };
+    const userId = isAdminExist.userId;
+    const tokenData = { userId, role };
     const accessToken = jwtValidationHelpers_1.jwtValidation.createJsonWebToken(tokenData, config_1.default.ACCESS_JWT_SECRET_KEY, '1d');
     const refreshToken = jwtValidationHelpers_1.jwtValidation.createJsonWebToken(tokenData, config_1.default.REFRESH_JWT_SECRET, '7d');
     return {

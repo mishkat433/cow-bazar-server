@@ -52,6 +52,16 @@ const getSingleUserHandler = (0, catchAsync_1.default)((req, res, next) => __awa
         data: result
     });
 }));
+const getMyProfileHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const payload = req.user ? req.user : req.params;
+    const result = yield user_services_1.userServices.getMyProfile(payload);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User fetched successfully',
+        data: result
+    });
+}));
 const updateUserHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const payload = req.body;
     const id = req.params.id;
@@ -78,5 +88,6 @@ exports.userController = {
     getSingleUserHandler,
     getAllUsersHandler,
     updateUserHandler,
-    deleteUserHandle
+    deleteUserHandle,
+    getMyProfileHandler
 };
