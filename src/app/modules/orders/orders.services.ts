@@ -1,10 +1,13 @@
 import httpStatus from "http-status"
-import { IOrder } from "./orders.interface"
+import { IOrder, IOrderFilter } from "./orders.interface"
 import { Order } from "./orders.model"
 import ApiError from "../../../Errors/ApiError"
 import { Cows } from "../cows/cows.mode";
 import { User } from "../users/user.mode";
-import mongoose from "mongoose";
+import mongoose, { SortOrder } from "mongoose";
+import { IPaginationOptions } from "../../../globalInterfaces/pagination";
+import { orderSearchableField } from "./orders.constants";
+import { paginationHelper } from "../../../helpers/paginationHelper";
 
 // : Promise<IOrder | null>
 const createOrder = async (orderData: IOrder): Promise<IOrder | null> => {
@@ -138,10 +141,50 @@ const createOrder = async (orderData: IOrder): Promise<IOrder | null> => {
 // }
 
 
-const getOrder = async () => {
+const getOrder = async (filters: IOrderFilter, paginationOptions: IPaginationOptions) => {
+
+
+    const { searchTerm, ...filtersData } = filters
+
+    const andCondition = []
+
+
+    if (searchTerm) {
+        andCondition.push({
+            $or: orderSearchableField.map((field) => ({
+                [field]: {
+                    $regex: searchTerm,
+                    $options: 'i'
+                }
+            }))
+        })
+    }
+
+    if (Object.keys(filtersData).length) {
+
+        andCondition.push({
+            $and: Object.entries(filtersData).map(([field, value]) => ({
+                [field]: value
+            }))
+        })
+    }
+
+
+    const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {}
+
+    const count = await Order.find(whereCondition).countDocuments()
+
+    const { page, limit, skip, sortBy, sortOrder, prevPage, nextPages } = paginationHelper.calculatePagination(paginationOptions, count)
+
+    const sortConditions: { [key: string]: SortOrder } = {}
+
+    if (sortBy && sortOrder) {
+        sortConditions[sortBy] = sortOrder
+    }
 
     const result = await Order.aggregate([
 
+        { $match: whereCondition },
         {
             $lookup: {
                 from: "users",
@@ -165,10 +208,59 @@ const getOrder = async () => {
                 cow_data: 1
             }
         },
-        { $project: { "buyer_data.password": 0 } }
+        { $project: { "buyer_data.password": 0 } },
+        { $skip: skip },
+        { $limit: limit }
 
     ])
 
+
+    // return result
+
+    return {
+        meta: {
+            page,
+            limit,
+            total: count,
+            prevPage,
+            nextPages
+        },
+        data: result
+    }
+
+}
+
+
+const getMyOrder = async (id: string) => {
+
+    // const result = await Order.find({ buyerId: id })
+    const result = await Order.aggregate([
+        { $match: { buyerId: id } },
+        {
+            $lookup: {
+                from: "users",
+                localField: "buyerId",
+                foreignField: "userId",
+                as: "buyer_data"
+            }
+        },
+        {
+            $lookup: {
+                from: "cows",
+                localField: "cowId",
+                foreignField: "cowId",
+                as: "cow_data"
+            }
+        },
+        {
+            $project: {
+                orderDetails: 1,
+                buyer_data: 1,
+                cow_data: 1
+            }
+        },
+        { $project: { "buyer_data.password": 0 } },
+    ])
 
     return result
 
@@ -177,5 +269,6 @@ const getOrder = async () => {
 
 export const orderServices = {
     createOrder,
-    getOrder
+    getOrder,
+    getMyOrder,
 }

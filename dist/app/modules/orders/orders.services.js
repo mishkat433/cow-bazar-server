@@ -18,8 +18,10 @@ const orders_model_1 = require("./orders.model");
 const ApiError_1 = __importDefault(require("../../../Errors/ApiError"));
 const cows_mode_1 = require("../cows/cows.mode");
 const user_mode_1 = require("../users/user.mode");
+const mongoose_1 = __importDefault(require("mongoose"));
 // : Promise<IOrder | null>
 const createOrder = (orderData) => __awaiter(void 0, void 0, void 0, function* () {
+    const session = yield mongoose_1.default.startSession();
     const cow = yield cows_mode_1.Cows.findOne({ cowId: orderData.cowId, label: { $ne: "sold out" } });
     if (!cow) {
         throw new ApiError_1.default(http_status_1.default.NON_AUTHORITATIVE_INFORMATION, "Cow is already sold out or doesn't exist.");
@@ -38,6 +40,7 @@ const createOrder = (orderData) => __awaiter(void 0, void 0, void 0, function* (
     }
     const decreasePrice = yield user_mode_1.User.updateOne({ userId: orderData.buyerId }, { $inc: { budget: -cow.price } });
     if (!decreasePrice) {
+        yield cows_mode_1.Cows.updateOne({ cowId: orderData.cowId }, { $set: { label: "for sale" } });
         throw new ApiError_1.default(http_status_1.default.NON_AUTHORITATIVE_INFORMATION, "something went wrong when trying to decrease");
     }
     const increasePrice = yield user_mode_1.User.updateOne({ userId: cow.sellerId }, { $inc: { income: cow.price } });
@@ -48,6 +51,7 @@ const createOrder = (orderData) => __awaiter(void 0, void 0, void 0, function* (
     if (!result) {
         throw new ApiError_1.default(http_status_1.default.NON_AUTHORITATIVE_INFORMATION, "Cows cannot created");
     }
+    session.endSession();
     return result;
 });
 // const createOrder = async (orderData: IOrder) => {

@@ -8,3 +8,8 @@ export type IOrder = {
     cowId: string;
     buyerId: string;
 }
+
+
+export type IOrderFilter = {
+    searchTerm?: string;
+};

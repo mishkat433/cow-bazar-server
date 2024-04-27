@@ -20,7 +20,7 @@ const auth = (...requiredRoles: string[]) => async (req: Request, res: Response,
         req.user = verifiedUser //globalInterface-> index.d.ts
 
         if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role)) {
-            throw new ApiError(httpStatus.FORBIDDEN, "Forbidden")
+            throw new ApiError(httpStatus.FORBIDDEN, "Forbidden, only specific users can be accessed this route")
         }
 
         next()
