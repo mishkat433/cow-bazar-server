@@ -8,6 +8,7 @@ import { userSearchableFields } from "./user.constants";
 import ApiError from "../../../Errors/ApiError";
 import httpStatus from "http-status";
 import { generateUserId } from "./user.utils";
+import { JwtPayload } from "jsonwebtoken";
 
 
 
@@ -104,6 +105,17 @@ const getSingleUser = async (id: string): Promise<IUser | null> => {
     return result
 }
 
+const getMyProfile = async (payload: JwtPayload): Promise<IUser | null> => {
+
+    const result = await User.findOne({ userId: payload.userId }, { password: 0 });
+
+    if (!result) {
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "failed to get a user")
+    }
+
+    return result
+}
+
 const updateUser = async (payload: IUser, id: string): Promise<IUser | null> => {
 
 
@@ -134,5 +146,6 @@ export const userServices = {
     getAllUsers,
     getSingleUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    getMyProfile
 }

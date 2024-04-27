@@ -1,5 +1,6 @@
 import { Model } from "mongoose";
 import { USER_ROLE } from "../../../enums/userEnums";
+import { JwtPayload } from "jsonwebtoken";
 
 
 export type UserModel = Model<IUser, object>;
@@ -20,9 +21,17 @@ export type IUser = {
     income: number;
 }
 
+// export type IGetUser = {
+//     userId: JwtPayload | null
+//     role: JwtPayload | null
+// }
+
 
 export type IUserFilter = {
     searchTerm?: string;
     minPrice?: number;
     maxPrice?: number;
 };
+
+
+

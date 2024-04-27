@@ -57,6 +57,21 @@ const getSingleUserHandler: RequestHandler = catchAsync(async (req: Request, res
     })
 })
 
+const getMyProfileHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    const payload = req.user ? req.user : req.params
+
+
+    const result = await userServices.getMyProfile(payload)
+
+    sendResponse<IUser>(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'User fetched successfully',
+        data: result
+    })
+})
+
 const updateUserHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     const payload = req.body
@@ -94,5 +109,6 @@ export const userController = {
     getSingleUserHandler,
     getAllUsersHandler,
     updateUserHandler,
-    deleteUserHandle
+    deleteUserHandle,
+    getMyProfileHandler
 }

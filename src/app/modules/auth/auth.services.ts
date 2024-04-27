@@ -12,7 +12,7 @@ import { Secret } from "jsonwebtoken";
 
 const loginUser = async (payload: IUserLogin): Promise<ILoginAdminResponse> => {
 
-    const isAdminExist = await User.findOne({ $and: [{ phoneNumber: payload.phoneNumber }, { role: payload.role }] }, { role: 1, password: 1, adminId: 1 }).lean()
+    const isAdminExist = await User.findOne({ $and: [{ phoneNumber: payload.phoneNumber }, { role: payload.role }] }, { role: 1, password: 1, userId: 1 }).lean()
 
     if (!isAdminExist) {
         throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "User doesn't exist with this phone number or role")
@@ -25,9 +25,9 @@ const loginUser = async (payload: IUserLogin): Promise<ILoginAdminResponse> => {
     }
 
     const role: string = isAdminExist.role;
-    const adminId: string = isAdminExist.userId;
+    const userId: string = isAdminExist.userId;
 
-    const tokenData: object = { adminId, role }
+    const tokenData: object = { userId, role }
 
     const accessToken = jwtValidation.createJsonWebToken(tokenData, config.ACCESS_JWT_SECRET_KEY as Secret, '1d')
 

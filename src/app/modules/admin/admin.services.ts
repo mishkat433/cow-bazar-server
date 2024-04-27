@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs';
 import { jwtValidation } from "../../../helpers/jwtValidationHelpers";
 import config from "../../../config";
 import { string } from "zod";
-import Jwt, { Secret } from "jsonwebtoken";
+import Jwt, { JwtPayload, Secret } from "jsonwebtoken";
 
 
 const createAdmin = async (payload: IAdmin): Promise<object> => {
@@ -93,8 +93,19 @@ const refreshToken = async (token: string): Promise<ILoginAdminResponse> => {
 
 }
 
+const getMyProfile = async (payload: JwtPayload): Promise<IAdmin | null> => {
+
+    const result = await Admin.findOne({ userId: payload.userId }, { password: 0 });
+
+    if (!result) {
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "failed to get a user")
+    }
+    return result
+}
+
 export const adminServices = {
     createAdmin,
     loginAdmin,
     refreshToken,
+    getMyProfile
 }

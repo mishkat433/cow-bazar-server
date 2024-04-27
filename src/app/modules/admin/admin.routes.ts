@@ -20,6 +20,9 @@ router.post('/login', validateRequest(adminValidation.loginAdminZodValidation), 
 
 router.post('/refresh-token', validateRequest(adminValidation.refreshTokenZodValidation), adminController.refreshTokenHandler);
 
+
+router.get('/my-profile', auth(USER_ROLE.admin), adminController.getMyProfileHandler);
+
 // router.patch('/updateUser/:id', userController.updateUserHandler);
 
 // router.delete('/deleteUser/:id', userController.deleteUserHandle);

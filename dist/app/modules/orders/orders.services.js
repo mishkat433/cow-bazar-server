@@ -8,6 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -19,6 +30,8 @@ const ApiError_1 = __importDefault(require("../../../Errors/ApiError"));
 const cows_mode_1 = require("../cows/cows.mode");
 const user_mode_1 = require("../users/user.mode");
 const mongoose_1 = __importDefault(require("mongoose"));
+const orders_constants_1 = require("./orders.constants");
+const paginationHelper_1 = require("../../../helpers/paginationHelper");
 // : Promise<IOrder | null>
 const createOrder = (orderData) => __awaiter(void 0, void 0, void 0, function* () {
     const session = yield mongoose_1.default.startSession();
@@ -113,8 +126,35 @@ const createOrder = (orderData) => __awaiter(void 0, void 0, void 0, function* (
 //         session.endSession();
 //     }
 // }
-const getOrder = () => __awaiter(void 0, void 0, void 0, function* () {
+const getOrder = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
+    const { searchTerm } = filters, filtersData = __rest(filters, ["searchTerm"]);
+    const andCondition = [];
+    if (searchTerm) {
+        andCondition.push({
+            $or: orders_constants_1.orderSearchableField.map((field) => ({
+                [field]: {
+                    $regex: searchTerm,
+                    $options: 'i'
+                }
+            }))
+        });
+    }
+    if (Object.keys(filtersData).length) {
+        andCondition.push({
+            $and: Object.entries(filtersData).map(([field, value]) => ({
+                [field]: value
+            }))
+        });
+    }
+    const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
+    const count = yield orders_model_1.Order.find(whereCondition).countDocuments();
+    const { page, limit, skip, sortBy, sortOrder, prevPage, nextPages } = paginationHelper_1.paginationHelper.calculatePagination(paginationOptions, count);
+    const sortConditions = {};
+    if (sortBy && sortOrder) {
+        sortConditions[sortBy] = sortOrder;
+    }
     const result = yield orders_model_1.Order.aggregate([
+        { $match: whereCondition },
         {
             $lookup: {
                 from: "users",
@@ -138,11 +178,55 @@ const getOrder = () => __awaiter(void 0, void 0, void 0, function* () {
                 cow_data: 1
             }
         },
-        { $project: { "buyer_data.password": 0 } }
+        { $project: { "buyer_data.password": 0 } },
+        { $skip: skip },
+        { $limit: limit }
+    ]);
+    // return result
+    return {
+        meta: {
+            page,
+            limit,
+            total: count,
+            prevPage,
+            nextPages
+        },
+        data: result
+    };
+});
+const getMyOrder = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    // const result = await Order.find({ buyerId: id })
+    const result = yield orders_model_1.Order.aggregate([
+        { $match: { buyerId: id } },
+        {
+            $lookup: {
+                from: "users",
+                localField: "buyerId",
+                foreignField: "userId",
+                as: "buyer_data"
+            }
+        },
+        {
+            $lookup: {
+                from: "cows",
+                localField: "cowId",
+                foreignField: "cowId",
+                as: "cow_data"
+            }
+        },
+        {
+            $project: {
+                orderDetails: 1,
+                buyer_data: 1,
+                cow_data: 1
+            }
+        },
+        { $project: { "buyer_data.password": 0 } },
     ]);
     return result;
 });
 exports.orderServices = {
     createOrder,
-    getOrder
+    getOrder,
+    getMyOrder,
 };

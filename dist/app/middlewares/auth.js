@@ -26,7 +26,7 @@ const auth = (...requiredRoles) => (req, res, next) => __awaiter(void 0, void 0,
         verifiedUser = jwtValidationHelpers_1.jwtValidation.verifyToken(token, config_1.default.ACCESS_JWT_SECRET_KEY);
         req.user = verifiedUser; //globalInterface-> index.d.ts
         if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role)) {
-            throw new ApiError_1.default(http_status_1.default.FORBIDDEN, "Forbidden");
+            throw new ApiError_1.default(http_status_1.default.FORBIDDEN, "Forbidden, only specific users can be accessed this route");
         }
         next();
     }

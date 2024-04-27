@@ -3,7 +3,7 @@ import catchAsync from "../../../shared/catchAsync"
 import sendResponse from "../../../shared/sendResponse"
 import httpStatus from "http-status"
 import { adminServices } from "./admin.services"
-import { ILoginAdminResponse } from "./admin.interface"
+import { IAdmin, ILoginAdminResponse } from "./admin.interface"
 import sendCookies from "../../../helpers/sendCookiesHelper"
 
 
@@ -51,8 +51,23 @@ const refreshTokenHandler: RequestHandler = catchAsync(async (req: Request, res:
     })
 })
 
+const getMyProfileHandler: RequestHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    const payload = req.user ? req.user : req.params
+
+    const result = await adminServices.getMyProfile(payload)
+
+    sendResponse<IAdmin>(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'admin fetched successfully',
+        data: result
+    })
+})
+
 export const adminController = {
     createAdminHandler,
     loginAdminHandler,
-    refreshTokenHandler
+    refreshTokenHandler,
+    getMyProfileHandler
 }

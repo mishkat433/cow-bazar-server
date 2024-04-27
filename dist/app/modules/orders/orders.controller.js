@@ -17,6 +17,9 @@ const http_status_1 = __importDefault(require("http-status"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const orders_services_1 = require("./orders.services");
+const pick_1 = __importDefault(require("../../../shared/pick"));
+const pagination_1 = require("../../../constance/pagination");
+const orders_constants_1 = require("./orders.constants");
 const createOrderHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const cowData = req.body;
     const result = yield orders_services_1.orderServices.createOrder(cowData);
@@ -28,22 +31,29 @@ const createOrderHandler = (0, catchAsync_1.default)((req, res, next) => __await
     });
 }));
 const getOrderHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield orders_services_1.orderServices.getOrder();
+    const filters = (0, pick_1.default)(req.query, orders_constants_1.ordersFilterableField);
+    const paginationOptions = (0, pick_1.default)(req.query, pagination_1.paginationField);
+    const result = yield orders_services_1.orderServices.getOrder(filters, paginationOptions);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
         message: 'order fetched successfully',
-        data: result
+        meta: result.meta,
+        data: result.data
     });
-    // sendResponse<ICow[]>(res, {
-    //     statusCode: httpStatus.OK,
-    //     success: true,
-    //     message: 'Cows fetched successfully',
-    //     meta: result.meta,
-    //     data: result.data
-    // })
+}));
+const getMyOrderHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const result = yield orders_services_1.orderServices.getMyOrder(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'order fetched successfully',
+        data: result || {}
+    });
 }));
 exports.orderController = {
     createOrderHandler,
-    getOrderHandler
+    getOrderHandler,
+    getMyOrderHandler,
 };

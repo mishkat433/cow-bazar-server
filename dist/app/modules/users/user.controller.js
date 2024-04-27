@@ -31,7 +31,6 @@ const createUserHandler = (0, catchAsync_1.default)((req, res, next) => __awaite
     });
 }));
 const getAllUsersHandler = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.user);
     const filters = (0, pick_1.default)(req.query, user_constants_1.userFilterableField);
     const paginationOptions = (0, pick_1.default)(req.query, pagination_1.paginationField);
     const result = yield user_services_1.userServices.getAllUsers(filters, paginationOptions);
